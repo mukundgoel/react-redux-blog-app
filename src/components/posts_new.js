@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { reduxForm } from 'redux-form'; // almost identical to the connect function from redux-react
 import { createPost } from '../actions/index';
+import { Link } from 'react-router';
 
 class PostsNew extends Component {
   render() {
@@ -37,6 +38,7 @@ class PostsNew extends Component {
         </div>
 
         <button type="Submit" className="btn btn-primary">Submit</button>
+        <Link to="/" className="btn btn-danger">Cancel</Link>
 
       </form>
     );

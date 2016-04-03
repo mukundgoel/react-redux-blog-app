@@ -1,9 +1,34 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { reduxForm } from 'redux-form'; // almost identical to the connect function from redux-react
 import { createPost } from '../actions/index';
 import { Link } from 'react-router';
 
+// context does not have to be deliberately passed from parent to child
+// <div className="...."> -> here we are explicitly passing className to div
+
 class PostsNew extends Component {
+  // try to avoid using context
+  // only use it when using react-router
+  static contextTypes = {
+    router: function () {
+      return React.PropTypes.func.isRequired;
+    }
+  };
+
+  onSubmit(props) {
+    // createPost is an Action Creator that creates a Promise as its payload
+    // whenever we call an Action Creator that creates a promise as its payload
+    // this call will return the same promise. When promise is resolved,
+    // then it means blog post was successfully created.
+    this.props.createPost(props)
+      .then(() => {
+        // blog post has been created, navigate the user to the index
+        // we navigate by calling this.context.router.push with the
+        // new path to navigate to.
+        this.context.router.push("/");
+      });
+  };
+
   render() {
     // redux-form injects props to this.props automatically
     const { fields: { title, categories, content }, handleSubmit } = this.props;
@@ -15,7 +40,7 @@ class PostsNew extends Component {
       // touched will help us determined if user interacted with this component
       // will help us not show error when user loads page the first time
 
-      <form onSubmit={handleSubmit(this.props.createPost)}>
+      <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
 
         <h3>Create A New Post</h3>
 
